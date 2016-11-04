@@ -14125,6 +14125,7 @@ Ny7+WPF7swAAAABJRU5ErkJggg==
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Grocery-Milk exhibit correlation. Grocery-Detergent_Papers also have correlation and that too of lesser error. Milk-Detergents_Paper also exhibit correlation but error will be too high to be substancial. 
+Grocery being correlated to two other products can be predicted using the other variable and thus is not that important while identifying customer spending habits. This confirms our earlier finding using the prediction score.
 Data points however and not normally distributed for any of the feature, the curve is right skewed for all of them.</p>
 
 </div>
@@ -19099,9 +19100,10 @@ p4aRiIiIiIgEPTWMREREREQk6KlhJCIiIiIiQU8NIxERERERCXpqGImIiIiISNBTw0hERERERILe
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>First and second components explain more than 70% of the variance. If we take into account first four components than 98% of variance can be explained by them.
-The first component the one with highest variance is combination of Milk, Grocery and Detergent_Papers products. Fresh and Frozen have negative weights gives a signal that as as the consumption on Milk, Grocery and Detergent_Papers (specially Detergent_Papers) increases the consumption of Fresh and Frozen Products decreases.
-Second Component is combination other three product namely Fresh, Frozen and Deli. However here remaining products have almost zero weights so it doesn't affect the component overall. 
-Third Component consist of Deli, Frozen (both positive) and Fresh (negative). 
+The first component the one with highest variance is combination of Milk, Grocery and Detergent_Papers products. These products signals a retail establishment.
+Second Component is combination other three product namely Fresh, Frozen and Deli. However here remaining products have almost zero weights so it doesn't affect the component overall. This signals a restaurant which is using fresh vegetables and frozen meat in large quantities. 
+Third Component consist of Deli, Frozen (both positive) and Fresh (negative). High consumption of these products indicate a fast food joint.
+Forth component is based only on Frozen products, while this doesn't clears much but this can again retailers specialized in frozen products.
 One observation across all principle components is the relevance of Grocery product. It have high positive weight in first component, the weight diminishes to close to zero in next three components and in forth component if gets high negative weight.</p>
 
 </div>
@@ -21464,8 +21466,7 @@ AAAYjf8Hg0z/WOi07QkAAAAASUVORK5CYII=
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The two clusters above are distinct based on consumption of two groups of products. Segment 0 are customers which consume high amount of Fresh and Frozen products. The other segment's customers are high consumers of Milk, Grocery and Detergents Papers. 
-Segment 0 can be an eatery and food joints consuming fresh and frozen products and serving cooked food. Segmwnt 1 on other hand seems to be a convenience store and retails joint.</p>
+<p>The two clusters above are distinct based on consumption of two groups of products. Segment 0 are customers which consume above average amount of Fresh and Frozen products. These can be an eatery and food joints consuming fresh and frozen products and serving cooked food. The other segment's customers are above average consumers of Milk, Grocery and Detergents Papers. This on other hand seems to be a convenience store and retail joints.</p>
 
 </div>
 </div>
@@ -21561,7 +21562,7 @@ Sample point 2 predicted to be in Cluster 1
 The change of delivery system from 5 days a week to 3 days a week will have different impact on different cluster of customers. Let’s also assume that distributor is passing on some of the reduced cost benefits from less frequent distribution to its customers. 
 The first cluster (restaurants) are using raw materials to prepare cooked food on daily basis and thus would like to get delivered the raw products as frequent as possible. Also wastage of inventory will be more while preparing and thus will hinder the process of inventory planning resulting in requirement of more regular supply. This cluster account for high sales of Fresh products and Fresh products by nature requires more frequent delivery. Restaurants and eateries by business work on high margin and low volume of customers and thus won’t be much affected even by price reduction of these products and would rather prefer more frequent delivery. 
 On other hand the second cluster (retailers) are using sophisticated inventory management systems and thus are more capable in inventory management and purchase projections. These customers probably would be ordering less than 5 days a week even currently and are expected to welcome the change. Retailers by business work on low margins and high volume and so even small reduction in price when met with high volume will generate good results for these customers’ bottom line. 
-Concluding given the assumption are correct distributor should offer the new service to selected customers only segregating them on basis of their specific product purchases.</p>
+Concluding given the assumption are correct distributor should offer the new service to selected customers only segregating them on basis of their specific product purchases. The customers with above average spending on Fresh and/or Frozen products might not welcome the change given their nature of business. On other hand customers with belove average spending on those products and above average spending on Milk, Grocery and Detergents are expected to welcome the change given the nature of business they are in.</p>
 
 </div>
 </div>
