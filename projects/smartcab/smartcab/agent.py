@@ -24,9 +24,6 @@ class LearningAgent(Agent):
         ###########
         # Set any additional class parameters as needed
 
-
-
-
     def reset(self, destination=None, testing=False):
         """ The reset function is called at the beginning of each trial.
             'testing' is set to True if testing trials are being used
@@ -91,8 +88,14 @@ class LearningAgent(Agent):
         # When learning, check if the 'state' is not in the Q-table
         # If it is not, create a new dictionary for that state
         #   Then, for each action available, set the initial Q-value to 0.0
+        print "Valid Actions are: ", self.valid_actions, " and type: ", type(self.valid_actions)
+
         if state not in self.Q.keys():
             for action in self.valid_actions:
+                print "State is: ", state, " and type: ", type(state)
+                print "Action is: ", action, " and type: ", type(action)
+                state_action_tuple = (state,action)
+                #print "state_action_tuple is: ", state_action_tuple, " and type: ", type(state_action_tuple)
                 self.Q [state][action]=0
 
         return self.Q
