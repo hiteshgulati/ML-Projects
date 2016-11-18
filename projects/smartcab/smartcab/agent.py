@@ -59,8 +59,8 @@ class LearningAgent(Agent):
         # When learning, check if the state is in the Q-table
         #   If it is not, create a dictionary in the Q-table for the current 'state'
         #   For each action, set the Q-value for the state-action pair to 0
-        
-        state = (waypoint,inputs)
+        input_tuple = tuple(sorted(inputs.items()))
+        state = (waypoint,input_tuple)
 
         return state
 
@@ -70,7 +70,7 @@ class LearningAgent(Agent):
             maximum Q-value of all actions based on the 'state' the smartcab is in. """
 
         ########### 
-        ## TO DO DONE##
+        ## TO DO ##
         ###########
         # Calculate the maximum Q-value of all actions for a given state
         state_dict= self.Q[state]
@@ -91,12 +91,13 @@ class LearningAgent(Agent):
         print "Valid Actions are: ", self.valid_actions, " and type: ", type(self.valid_actions)
 
         if state not in self.Q.keys():
-            for action in self.valid_actions:
-                print "State is: ", state, " and type: ", type(state)
-                print "Action is: ", action, " and type: ", type(action)
-                state_action_tuple = (state,action)
-                #print "state_action_tuple is: ", state_action_tuple, " and type: ", type(state_action_tuple)
-                self.Q [state][action]=0
+            #print "State is: ", state, " and type: ", type(state)
+            #print "Action is: ", action, " and type: ", type(action)
+            #state_action_tuple = (state,action)
+            #print "state_action_tuple is: ", state_action_tuple, " and type: ", type(state_action_tuple)
+            actionQ = dict((i,0) for i in self.valid_actions)
+            print actionQ
+            self.Q [state]=actionQ
 
         return self.Q
 
@@ -111,7 +112,7 @@ class LearningAgent(Agent):
         action = random.choice(self.valid_actions)
 
         ########### 
-        ## TO DO DONE##
+        ## TO DO ##
         ###########
         # When not learning, choose a random action
         # When learning, choose a random action with 'epsilon' probability
@@ -131,7 +132,7 @@ class LearningAgent(Agent):
             when conducting learning. """
 
         ###########
-        ## TO DO DONE##
+        ## TO DO ##
         ###########
         # When learning, implement the value iteration update rule
         #   Use only the learning rate 'alpha' (do not use the discount factor 'gamma')
