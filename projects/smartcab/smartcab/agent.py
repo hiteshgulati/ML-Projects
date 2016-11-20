@@ -40,7 +40,13 @@ class LearningAgent(Agent):
         # If 'testing' is True, set epsilon and alpha to 0
         self.epsilon -= .05
 
-        return self.epsilon
+        if testing == True :
+            self.epsilon = 0
+            self.alpha =0
+        elif    self.epsilon <0:
+            self.epsilon=0
+
+        return None
 
     def build_state(self):
         """ The build_state function is called when the agent requests data from the 
@@ -51,6 +57,8 @@ class LearningAgent(Agent):
         waypoint = self.planner.next_waypoint() # The next waypoint 
         inputs = self.env.sense(self)           # Visual input - intersection light and traffic
         deadline = self.env.get_deadline(self)  # Remaining deadline
+        # print "(build_satte) deadline type is: ", type(deadline)
+        print "(build_state) inputs are: ",inputs
 
         ########### 
         ## TO DO DONE##
@@ -60,7 +68,10 @@ class LearningAgent(Agent):
         #   If it is not, create a dictionary in the Q-table for the current 'state'
         #   For each action, set the Q-value for the state-action pair to 0
         input_tuple = tuple(sorted(inputs.items()))
+        input_light = inputs['light']
+        input_oncoming = inputs['oncoming']
         state = (waypoint,input_tuple)
+        print "(build_state) state built, state: ", state
 
         return state
 
@@ -73,10 +84,14 @@ class LearningAgent(Agent):
         ## TO DO ##
         ###########
         # Calculate the maximum Q-value of all actions for a given state
-        state_dict= self.Q[state]
+        print "(get_maxQ) state Q is: ", self.Q[state]
+        state_dict= dict(self.Q[state])
+        print "(get_maxQ) in dict form: ", state_dict
         action_sorted_list = sorted(state_dict.keys(), key=state_dict.get, reverse=True)
+        print "(get_maxQ) sorted actions are: ", action_sorted_list
         maxQ = action_sorted_list[0]
-        return maxQ 
+        print "(get_maxQ) MaxQ action: ", maxQ
+        return maxQ
 
 
     def createQ(self, state):
@@ -88,16 +103,18 @@ class LearningAgent(Agent):
         # When learning, check if the 'state' is not in the Q-table
         # If it is not, create a new dictionary for that state
         #   Then, for each action available, set the initial Q-value to 0.0
-        print "Valid Actions are: ", self.valid_actions, " and type: ", type(self.valid_actions)
+        print "(createQ)Valid Actions are: ", self.valid_actions, " and type: ", type(self.valid_actions)
 
         if state not in self.Q.keys():
             #print "State is: ", state, " and type: ", type(state)
             #print "Action is: ", action, " and type: ", type(action)
             #state_action_tuple = (state,action)
             #print "state_action_tuple is: ", state_action_tuple, " and type: ", type(state_action_tuple)
+            print "(createQ)state being added to Q."
             actionQ = dict((i,0) for i in self.valid_actions)
             print actionQ
             self.Q [state]=actionQ
+            print "(createQ)added item to Q is :  ", self.Q[state]
 
         return self.Q
 
@@ -117,11 +134,14 @@ class LearningAgent(Agent):
         # When not learning, choose a random action
         # When learning, choose a random action with 'epsilon' probability
         #   Otherwise, choose an action with the highest Q-value for the current state
-
+        print "(choose_action) epsilon value is: ", self.epsilon
         if random.random() <= self.epsilon:
             action = random.choice(self.valid_actions)
+            print "(choose_action) random action chosen: ", action
         else:
-            action = self.get_maxQ(self,state)
+            print "(choose_action) MaxQ item being chosen."
+            action = self.get_maxQ(state)
+            print "(choose_action) action chosen: ", action
  
         return action
 
@@ -132,11 +152,15 @@ class LearningAgent(Agent):
             when conducting learning. """
 
         ###########
-        ## TO DO ##
+        ## TO DO DONE##
         ###########
         # When learning, implement the value iteration update rule
         #   Use only the learning rate 'alpha' (do not use the discount factor 'gamma')
+        print "(learn) pre learning: state: ", state, " action: ", action, " Qvalue: ", self.Q[state][
+            action], " reward: ", reward
         self.Q[state][action] += self.alpha * reward
+        print "(learn) post learning: state: ", state, " action: ", action, " Qvalue: ", self.Q[state][
+            action], " reward: ", reward
 
         return None
 
