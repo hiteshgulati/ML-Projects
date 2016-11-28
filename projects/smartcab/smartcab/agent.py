@@ -23,6 +23,7 @@ class LearningAgent(Agent):
         ## TO DO ##
         ###########
         # Set any additional class parameters as needed
+        self.total_trails =0
 
     def reset(self, destination=None, testing=False):
         """ The reset function is called at the beginning of each trial.
@@ -38,13 +39,15 @@ class LearningAgent(Agent):
         # Update epsilon using a decay function of your choice
         # Update additional class parameters as needed
         # If 'testing' is True, set epsilon and alpha to 0
-        self.epsilon -= .05
+        self.total_trails +=1
+        self.a = .03
+        #self.epsilon -= .05
 
         if testing == True :
             self.epsilon = 0
             self.alpha =0
-        elif    self.epsilon <0:
-            self.epsilon=0
+        else:
+            self.epsilon = float(1)/math.exp(float(self.a*self.total_trails))
 
         return None
 
@@ -104,17 +107,17 @@ class LearningAgent(Agent):
         # If it is not, create a new dictionary for that state
         #   Then, for each action available, set the initial Q-value to 0.0
         print "(createQ)Valid Actions are: ", self.valid_actions, " and type: ", type(self.valid_actions)
-
-        if state not in self.Q.keys():
-            #print "State is: ", state, " and type: ", type(state)
-            #print "Action is: ", action, " and type: ", type(action)
-            #state_action_tuple = (state,action)
-            #print "state_action_tuple is: ", state_action_tuple, " and type: ", type(state_action_tuple)
-            print "(createQ)state being added to Q."
-            actionQ = dict((i,0) for i in self.valid_actions)
-            print actionQ
-            self.Q [state]=actionQ
-            print "(createQ)added item to Q is :  ", self.Q[state]
+        if self.learning is True:
+            if state not in self.Q.keys():
+                #print "State is: ", state, " and type: ", type(state)
+                #print "Action is: ", action, " and type: ", type(action)
+                #state_action_tuple = (state,action)
+                #print "state_action_tuple is: ", state_action_tuple, " and type: ", type(state_action_tuple)
+                print "(createQ)state being added to Q."
+                actionQ = dict((i,0) for i in self.valid_actions)
+                print actionQ
+                self.Q [state]=actionQ
+                print "(createQ)added item to Q is :  ", self.Q[state]
 
         return self.Q
 
@@ -126,7 +129,7 @@ class LearningAgent(Agent):
         # Set the agent state and default action
         self.state = state
         self.next_waypoint = self.planner.next_waypoint()
-        action = random.choice(self.valid_actions)
+        #action = random.choice(self.valid_actions)
 
         ########### 
         ## TO DO ##
@@ -158,7 +161,8 @@ class LearningAgent(Agent):
         #   Use only the learning rate 'alpha' (do not use the discount factor 'gamma')
         print "(learn) pre learning: state: ", state, " action: ", action, " Qvalue: ", self.Q[state][
             action], " reward: ", reward
-        self.Q[state][action] += self.alpha * reward
+        self.Q[state][action] = (1-self.alpha)*self.Q[state][action] + \
+                                self.alpha * reward
         print "(learn) post learning: state: ", state, " action: ", action, " Qvalue: ", self.Q[state][
             action], " reward: ", reward
 
@@ -189,7 +193,7 @@ def run():
     #   verbose     - set to True to display additional output from the simulation
     #   num_dummies - discrete number of dummy agents in the environment, default is 100
     #   grid_size   - discrete number of intersections (columns, rows), default is (8, 6)
-    env = Environment()
+    env = Environment(verbose=True)
     
     ##############
     # Create the driving agent
@@ -197,7 +201,7 @@ def run():
     #   learning   - set to True to force the driving agent to use Q-learning
     #    * epsilon - continuous value for the exploration factor, default is 1
     #    * alpha   - continuous value for the learning rate, default is 0.5
-    agent = env.create_agent(LearningAgent,learning=True)
+    agent = env.create_agent(LearningAgent,learning=True,alpha = .3)
     
     ##############
     # Follow the driving agent
@@ -212,14 +216,14 @@ def run():
     #   display      - set to False to disable the GUI if PyGame is enabled
     #   log_metrics  - set to True to log trial and simulation results to /logs
     #   optimized    - set to True to change the default log file name
-    sim = Simulator(env, update_delay=.01,log_metrics=True)
+    sim = Simulator(env, update_delay=.000001,log_metrics=True,optimized=True)
     
     ##############
     # Run the simulator
     # Flags:
     #   tolerance  - epsilon tolerance before beginning testing, default is 0.05 
     #   n_test     - discrete number of testing trials to perform, default is 0
-    sim.run(n_test=10)
+    sim.run(tolerance=.03, n_test=30)
 
 
 if __name__ == '__main__':
