@@ -70,11 +70,10 @@ class LearningAgent(Agent):
         # When learning, check if the state is in the Q-table
         #   If it is not, create a dictionary in the Q-table for the current 'state'
         #   For each action, set the Q-value for the state-action pair to 0
-        light = inputs['light']
-        oncoming = inputs ['oncoming']
-        left = inputs['left']
-        right = inputs ['right']
-        state = (waypoint, light, oncoming, left)
+        input_tuple = tuple(sorted(inputs.items()))
+        input_light = inputs['light']
+        input_oncoming = inputs['oncoming']
+        state = (waypoint,input_tuple)
         print "(build_state) state built, state: ", state
 
         return state
@@ -88,19 +87,13 @@ class LearningAgent(Agent):
         ## TO DO ##
         ###########
         # Calculate the maximum Q-value of all actions for a given state
-        #print "(get_maxQ) state Q is: ", self.Q[state]
-        #state_dict= dict(self.Q[state])
-        #print "(get_maxQ) in dict form: ", state_dict
-        #action_sorted_list = sorted(state_dict.keys(), key=state_dict.get, reverse=True)
-        #print "(get_maxQ) sorted actions are: ", action_sorted_list
-        #maxQ = action_sorted_list[0]
-        #print "(get_maxQ) MaxQ action: ", maxQ
-        maxQ_item = self.Q[self.state][max(self.Q[self.state], key=(lambda key: self.Q[self.state][key]))]
-        maxQ_list = []
-        for i in self.Q[self.state]:
-            if self.Q[self.state][i] == maxQ_item :
-                maxQ_list.append(i)
-        maxQ = random.choice(maxQ_list)
+        print "(get_maxQ) state Q is: ", self.Q[state]
+        state_dict= dict(self.Q[state])
+        print "(get_maxQ) in dict form: ", state_dict
+        action_sorted_list = sorted(state_dict.keys(), key=state_dict.get, reverse=True)
+        print "(get_maxQ) sorted actions are: ", action_sorted_list
+        maxQ = action_sorted_list[0]
+        print "(get_maxQ) MaxQ action: ", maxQ
         return maxQ
 
 
@@ -113,14 +106,20 @@ class LearningAgent(Agent):
         # When learning, check if the 'state' is not in the Q-table
         # If it is not, create a new dictionary for that state
         #   Then, for each action available, set the initial Q-value to 0.0
-        # print "(createQ)Valid Actions are: ", self.valid_actions, " and type: ", type(self.valid_actions)
+        print "(createQ)Valid Actions are: ", self.valid_actions, " and type: ", type(self.valid_actions)
         if self.learning is True:
-             if state not in self.Q.keys():
-                  self.Q [state]= dict((i,0) for i in self.valid_actions)
-                  print "(createQ)added item to Q is :  ", self.Q[state]
+            if state not in self.Q.keys():
+                #print "State is: ", state, " and type: ", type(state)
+                #print "Action is: ", action, " and type: ", type(action)
+                #state_action_tuple = (state,action)
+                #print "state_action_tuple is: ", state_action_tuple, " and type: ", type(state_action_tuple)
+                print "(createQ)state being added to Q."
+                actionQ = dict((i,0) for i in self.valid_actions)
+                print actionQ
+                self.Q [state]=actionQ
+                print "(createQ)added item to Q is :  ", self.Q[state]
 
-
-        return
+        return self.Q
 
 
     def choose_action(self, state):
@@ -139,15 +138,14 @@ class LearningAgent(Agent):
         # When learning, choose a random action with 'epsilon' probability
         #   Otherwise, choose an action with the highest Q-value for the current state
         print "(choose_action) epsilon value is: ", self.epsilon
-        if self.learning is True:
-            if random.random() <= self.epsilon:
-                action = random.choice(self.valid_actions)
-                print "(choose_action) random action chosen: ", action
-            else:
-                print "(choose_action) MaxQ item being chosen."
-                action = self.get_maxQ(state)
-                print "(choose_action) action chosen: ", action
-        else: action = self.get_maxQ(state)
+        if random.random() <= self.epsilon:
+            action = random.choice(self.valid_actions)
+            print "(choose_action) random action chosen: ", action
+        else:
+            print "(choose_action) MaxQ item being chosen."
+            action = self.get_maxQ(state)
+            print "(choose_action) action chosen: ", action
+ 
         return action
 
 
